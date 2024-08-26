@@ -2,12 +2,24 @@
 
 import Image from "next/image";
 import getStripe from "@/utils/get-stripe";
-import { SignedIn, SignedOut, UserButton  } from "@clerk/nextjs";
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Head from "next/head";
-import { AppBar, Toolbar, Typography, Container, Button, Box, Grid } from "@mui/material";
+import { AppBar, Toolbar, Typography, Container, Button, Box, Grid, CssBaseline } from "@mui/material";
+import {createTheme, ThemeProvider} from '@mui/material/styles';
+import '@fontsource/inter';
+import { useRouter } from "next/navigation";
+
+
 
 
 export default function Home() {
+  const router = useRouter();
+
+  const theme = createTheme({
+    typography: {
+      fontFamily: '"Inter", "Arial", sans-serif',
+    }
+  })
 
   const handleSubmit = async () => {
     const checkoutSession = await fetch('/api/checkout_sessions', {
@@ -20,105 +32,150 @@ export default function Home() {
     const checkoutSessionJson = await checkoutSession.json();
 
 
-    if(checkoutSession.statusCode === 500) {
+    if (checkoutSession.statusCode === 500) {
       console.error(checkoutSession.message)
       return
     }
 
     const stripe = await getStripe();
-    const {error} = await stripe.redirectToCheckout({
+    const { error } = await stripe.redirectToCheckout({
       sessionId: checkoutSessionJson.id,
     })
 
     if (error) {
       console.warn(error.message)
     }
+
   }
   return (
-    <Container maxWidth="100vw">
+    <ThemeProvider theme={theme}>
+    <CssBaseline/>
+    <Container
+      maxWidth="100vw"
+      sx={{
+        backgroundImage: "url('https://images.unsplash.com/photo-1684162204507-0e21d7eeded7?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
+        backgroundSize: 'cover',
+        color: 'white',
+        width: '100vw',
+        height: '100vh',
+        overflow: 'hidden',
+
+
+      }}>
       <Head>
         <title>AI flashcards</title>
-        <meta name="description" content="Create flashcard from your text"/>
+        <meta name="description" content="Create flashcard from your text" />
+
       </Head>
 
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" style={{flexGrow: 1}}>RecallAI</Typography>
-          <SignedOut>
-            <Button color="inherit" href="/sign-in">{' '}Login</Button>
-            <Button color="inherit" href="/sign-up">{' '}Sign up</Button>
-          </SignedOut>
-          <SignedIn>
-            <UserButton/>
-          </SignedIn>
-        </Toolbar>
 
-      </AppBar>
+        <AppBar position="static" color="transparent" sx={{mt: 2}}>
+          <Toolbar variant="dense">
+            <Typography variant="h5" style={{ flexGrow: 1 }}>LOGO</Typography>
+            <SignedOut>
+              <Button color="inherit" onClick={ (e) => {e.preventDefault(); router.push("/sign-in")}}>{' '}Login</Button>
+              <Button color="inherit" onClick={ (e) => {e.preventDefault(); router.push("/sign-up")}} sx={{
+                borderRadius: '10px',
+                border: '2px solid white',
+                color: 'black',
+                backgroundColor: 'white',
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.8)'
+                }
+
+              }}>{' '}Sign up</Button>
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
+          </Toolbar>
+
+        </AppBar>
+      
+      <Box sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        overflow: 'hidden',
+      }}>
       <Box sx={{
         textAlign: 'center',
+        verticalAlign: 'center',
         my: 4,
       }}
       >
-        <Typography variant="h2" gutterBottom>Welcome to Flashcard SaaS</Typography>
+        <Typography variant="h2" gutterBottom>Welcome to Memora</Typography>
         <Typography variant="h5" gutterBottom>
           {' '}
           Utilize our cutting edge AI to intelligently break down you text into concise flashcards, perfect for studying
         </Typography>
-        <Button variant="contained" color="primary" sx={{mt: 2}}>Get Started</Button>
-      </Box>
-      <Box sx={{my: 6}}>
-        <Typography variant="h2" gutterBottom>Features</Typography>
-        <Grid container spacing={4}>
-          <Grid item xs={12} md={4}>
-            <Typography variant="h6" gutterBottom>Accessible Anywhere</Typography>
-            <Typography>Access your flashcards from any device, at any time. Study on the go with ease</Typography>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Typography variant="h6" gutterBottom>Easy Text Input</Typography>
-            <Typography>Simply input your text and let our software do the rest. Creating flashcards has never been easier</Typography>
-          </Grid>
-          <Grid item xs={12} md={4} gutterBottom>
-            <Typography variant="h6">Easy Text Input</Typography>
-            <Typography>Simply input your text and let our software do the rest. Creating flashcards has never been easier</Typography>
-          </Grid>
-        </Grid>
+        <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        gap={2}
+        >
+        <Button variant="contained" color="primary" sx={{
+                mt: 2,
+                borderRadius: '10px',
+                border: '2px solid white',
+                color: 'black',
+                backgroundColor: 'white',
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.8)'
+                }
 
-      </Box>
-      <Box sx={{my: 6, textAlign: 'center'}}>
-        <Typography variant="h4" gutterBottom>Pricing</Typography>
-        <Grid container spacing={4}>
-          <Grid item xs={12} md={6}>
-            <Box sx={{
-              padding: 3,
-              border: '1px solid',
-              borderColor: 'grey.300',
-              borderRadius: 2,
-            }}>
-              <Typography variant="h5" gutterBottom>Basic</Typography>
-              <Typography variant="h6" gutterBottom>$5 / month</Typography>
+              }} onClick={ (e) => {e.preventDefault(); router.push("/generate")}}>Get Started</Button>
+        <Button variant="contained" color="primary" sx={{
+                mt: 2,
+                borderRadius: '10px',
+                border: '2px solid white',
+                color: 'black',
+                backgroundColor: 'white',
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.8)'
+                }
 
-              <Typography>
+              }} onClick={handleSubmit}>Choose Pro</Button>
+              </Box>
+      </Box>
+      
+      {/* <Box sx={{ 
+        my: 6, 
+        textAlign: 'center',
+        justifyContent: 'center',
+        alignItems: 'center', 
+        }}>
+        <Typography variant="h5" gutterBottom>Unlimited Flashcards Generation & Saves for $5/month</Typography>
+        <Typography gutterBottom>
                 {' '}
-                Basic Plan
               </Typography>
-              <Button variant="contained" color="primary">
-                Choose Basic
+              <Button variant="contained" color="primary"  sx={{
+                borderRadius: '10px',
+                border: '2px solid white',
+                color: 'black',
+                backgroundColor: 'white',
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.8)'
+                }
+
+              }} onClick={handleSubmit}>
+                Choose Pro
 
               </Button>
-              
-            </Box>
-          </Grid>
+        {/* <Grid container>
           <Grid item xs={12} md={6}>
             <Box sx={{
               padding: 3,
-              border: '1px solid',
               borderColor: 'grey.300',
               borderRadius: 2,
             }}>
               <Typography variant="h5" gutterBottom>Pro</Typography>
-              <Typography variant="h6" gutterBottom>$10 / month</Typography>
+              <Typography variant="h6" gutterBottom>$5 / month</Typography>
 
-              <Typography>
+              <Typography gutterBottom>
                 {' '}
                 Unlimited Everything
               </Typography>
@@ -126,13 +183,17 @@ export default function Home() {
                 Choose Pro
 
               </Button>
-              
+
             </Box>
           </Grid>
         </Grid>
 
+      </Box> 
+      */}
       </Box>
 
     </Container>
+    </ThemeProvider>
+
   )
 }

@@ -3,9 +3,10 @@
 import { useUser } from "@clerk/nextjs"
 import { useRouter } from "next/navigation";
 import { use, useState } from "react";
-import { Grid, Card, Container, TextField, Typography, Box, Paper, Button, CardActionArea, CardContent, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
+import { CssBaseline, ThemeProvider, createTheme, Grid, Card, Container, TextField, Typography, Box, Paper, Button, CardActionArea, CardContent, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
 import { db } from "@/firebase";
 import { doc, collection, getDoc, setDoc, writeBatch } from "firebase/firestore";
+import '@fontsource/inter';
 
 export default function Generate() {
     const { isLoaded, isSignedIn, user } = useUser()
@@ -15,6 +16,13 @@ export default function Generate() {
     const [name, setName] = useState('')
     const [open, setOpen] = useState(false);
     const router = useRouter();
+
+    const theme = createTheme({
+        typography: {
+          fontFamily: '"Inter", "Arial", sans-serif',
+        }
+      })
+    
 
     const handleSubmit = async () => {
         fetch('api/generate', {
@@ -79,7 +87,19 @@ export default function Generate() {
 
     }
 
-    return (<Container maxWidth="md">
+    return (
+    <ThemeProvider theme={theme}>
+    <CssBaseline/>
+    <Box sx={{
+        backgroundImage: "url('https://images.unsplash.com/photo-1684162204507-0e21d7eeded7?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
+        backgroundSize: 'cover',
+        color: 'white',
+        width: '100vw',
+        height: '100vh',
+        overflow: 'hidden',
+
+    }}>
+    <Container maxWidth="md">
         <Box
             sx={{
                 mt: 4,
@@ -89,8 +109,7 @@ export default function Generate() {
                 alignItems: 'center',
             }}
         >
-            <Typography variant="h4">Generate Flashcards</Typography>
-            <Paper sx={{ p: 4, width: '100%' }}>
+            <Typography variant="h4" mb={2}>Generate Flashcards</Typography>
                 <TextField
                     value={text}
                     onChange={(e) => setText(e.target.value)}
@@ -100,7 +119,13 @@ export default function Generate() {
                     rows={4}
                     variant="outlined"
                     sx={{
-                        mb: 2,
+                        backgroundColor: 'white',
+                        borderRadius: '10px',
+                        mb: 2 
+
+                        
+                        
+                        
                     }}
                 ></TextField>
                 <Button
@@ -108,10 +133,17 @@ export default function Generate() {
                     color="primary"
                     onClick={handleSubmit}
                     fullWidth
+                    sx={{
+                        borderRadius: '10px',
+                        border: '2px solid white',
+                        color: 'black',
+                        backgroundColor: 'white',
+                        '&:hover': {
+                          backgroundColor: 'rgba(255, 255, 255, 0.8)'
+                        }}}
 
 
                 >{' '}Submit</Button>
-            </Paper>
         </Box>
         {flashcards.length > 0 && <Box sx={{ mt: 4 }}>
             <Typography variant="h5">Flashcards Preview</Typography>
@@ -200,6 +232,8 @@ export default function Generate() {
             </DialogActions> 
         </Dialog>
     </Container>
+    </Box>
+    </ThemeProvider>
     )
 
 
