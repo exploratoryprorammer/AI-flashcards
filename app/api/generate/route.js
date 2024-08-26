@@ -1,26 +1,19 @@
 import OpenAI from "openai";
 import { NextResponse } from "next/server";
-import OpenAI from "openai";
-import RootLayout from "@/app/layout";
 
-const systemprompt = `Generate 10 flashcards. Each flashcard should contain:
+const systemPrompt = `
+You are a flashcard creator, you take in text and create multiple flashcards from it with questions on the front and answers in back. Make sure to create exactly 10 flashcards.
+Both front and back should be one sentence long.
 
-Front: A clear question or key term.
-Back: A concise answer or definition.
-Example (Optional): An example or additional detail to reinforce understanding.
-Example:
-
-Front: What is a closure?
-Back: A function that retains access to its lexical scope, even when the function is executed outside that scope.
-Example: A function returning another function that references variables from its parent scope.
-Return in the following JSON format 
+ and get just the flashcards
+You should return in the following JSON format:
 {
-    "flashcards": [
-        {
-            "front": str,
-            "back": str
-        }
-    ]
+  "flashcards":[
+    {
+      "front": "Front of the card",
+      "back": "Back of the card"
+    }
+  ]
 }
 `
 //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
@@ -35,12 +28,13 @@ export async function POST(req)
     const completion = await openai.chat.completions.create({
         model: 'meta-llama/llama-3.1-8b-instruct:free',
         messages:[
-            {role: "system", content: systemprompt},
+            {role: "system", content: systemPrompt},
             {role: 'user', content: data},
         ],
         response_format: {type: 'json_object'}
     })
+    console.log(completion.choices[0].message.content);
 
-    const flashcards = JSON.parse(completion.choices[0].messages.content);
-    return NextResponse.json(flashcards.flashcard)
+    const flashcards = JSON.parse(completion.choices[0].message.content);
+    return NextResponse.json(flashcards.flashcards)
 }
