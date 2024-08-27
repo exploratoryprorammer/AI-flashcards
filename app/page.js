@@ -25,7 +25,7 @@ export default function Home() {
     const checkoutSession = await fetch('/api/checkout_sessions', {
       method: 'POST',
       headers: {
-        origin: 'http://localhost:3000',
+        origin: 'https://memora-nu.vercel.app/',
       },
     })
 
