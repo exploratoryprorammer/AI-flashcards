@@ -41,7 +41,7 @@ export async function POST(req) {
         success_url: `${req.headers.get(
           'origin',
         )}/result?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: 'http://localhost:3000/',
+        cancel_url: 'https://memoraai.vercel.app/',
         // `${req.headers.get(
         //   'origin',
         // )}/result?session_id={CHECKOUT_SESSION_ID}`,
