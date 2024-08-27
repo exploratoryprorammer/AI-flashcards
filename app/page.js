@@ -106,10 +106,10 @@ export default function Home() {
         my: 4,
       }}
       >
-        <Typography variant="h2" gutterBottom>Welcome to Memora</Typography>
+        <Typography variant="h2" gutterBottom>Welcome to MemoraAI</Typography>
         <Typography variant="h5" gutterBottom>
           {' '}
-          Utilize our cutting edge AI to intelligently break down you text into concise flashcards, perfect for studying
+          Utilize our cutting edge AI to intelligently break down your text into concise flashcards, perfect for studying
         </Typography>
         <Box
         display="flex"
@@ -138,7 +138,7 @@ export default function Home() {
                   backgroundColor: 'rgba(255, 255, 255, 0.8)'
                 }
 
-              }} onClick={handleSubmit}>Choose Pro</Button>
+              }} onClick={handleSubmit}>Donate</Button>
               </Box>
       </Box>
       

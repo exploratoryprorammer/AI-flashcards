@@ -211,7 +211,7 @@ export default function Generate() {
                             flexDirection: 'column',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            height: '80vh', // Adjust this height if needed
+                            height: '80vh', 
                         }}>
                             <Box sx={{
                                 display: 'flex',
@@ -220,7 +220,7 @@ export default function Generate() {
                                 width: '100%',
                                 maxWidth: '1100px',
                                 position: 'relative',
-                                height: '400px', // Fixed height for the card container
+                                height: '400px', 
                             }}>
                                 <IconButton
                                     onClick={prevcard}

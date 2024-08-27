@@ -4,8 +4,10 @@ import { useEffect, useState } from "react"
 import getStripe from "@/utils/get-stripe"
 import { useSearchParams } from "next/navigation"
 import { useRouter } from "next/navigation"
-import { Box, CircularProgress, Container, Typography } from "@mui/material"
+import { IconButton, AppBar, Toolbar, Box, Button, CircularProgress, Container, Typography } from "@mui/material"
 import { connectFirestoreEmulator } from "firebase/firestore"
+import { ArrowBack } from "@mui/icons-material"
+import { SignedOut, SignedIn, user } from "@clerk/nextjs"
 
 const ResultPage = () => {
     const searchParams = useSearchParams()
@@ -83,6 +85,7 @@ const ResultPage = () => {
             {console.log("session: --->", session)}
             {session.payment_status === "paid" ? (
                 <>
+                    {console.log(session)}
                     <Typography variant="h4">Thank you for purchasing.</Typography>
                     <Box sx={{mt:22}}>
                         <Typography variant="h4"> Session ID: {session_id}</Typography>
@@ -92,7 +95,9 @@ const ResultPage = () => {
                 ) :
                 (
                     <>
+                    {console.log(session)}
                     <Typography variant="h4">Payment Failed.{session.status}</Typography>
+                    <Button></Button>
                     <Box sx={{mt:22}}>
                         <Typography variant="body1">Payment Failed. Try Again</Typography>
                     </Box>
