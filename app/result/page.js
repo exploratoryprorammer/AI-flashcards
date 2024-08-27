@@ -13,6 +13,7 @@ const ResultPage = () => {
     console.log(session_id)
 
 
+
     const [loading, setLoading] = useState(true);
     const [session, setSession] = useState(null)
     const [error, setError] = useState(null)
@@ -88,10 +89,10 @@ const ResultPage = () => {
                         <Typography variant="body1">We recieved you parent. You will recieve an email with you order reciept shortly</Typography>
                     </Box>
                 </>
-                ) : 
+                ) :
                 (
                     <>
-                    <Typography variant="h4">Payment Failed.</Typography>
+                    <Typography variant="h4">Payment Failed.{session.status}</Typography>
                     <Box sx={{mt:22}}>
                         <Typography variant="body1">Payment Failed. Try Again</Typography>
                     </Box>

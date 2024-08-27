@@ -2,11 +2,13 @@
 
 import { useUser } from "@clerk/nextjs"
 import { useRouter } from "next/navigation";
-import { use, useState } from "react";
-import { CssBaseline, ThemeProvider, createTheme, Grid, Card, Container, TextField, Typography, Box, Paper, Button, CardActionArea, CardContent, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
+import { use, useState, useEffect } from "react";
+import { Toolbar, AppBar, IconButton, CssBaseline, ThemeProvider, createTheme, Grid, Card, Container, TextField, Typography, Box, Paper, Button, CardActionArea, CardContent, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
 import { db } from "@/firebase";
 import { doc, collection, getDoc, setDoc, writeBatch } from "firebase/firestore";
-import '@fontsource/inter';
+import { ArrowBack, ArrowForward, Home,Folder } from "@mui/icons-material";
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+
 
 export default function Generate() {
     const { isLoaded, isSignedIn, user } = useUser()
@@ -15,22 +17,29 @@ export default function Generate() {
     const [text, setText] = useState('');
     const [name, setName] = useState('')
     const [open, setOpen] = useState(false);
+    const [card, setCard] = useState(0);
     const router = useRouter();
+
+    useEffect(() => {
+        if (isLoaded && !user) {
+            router.push('/sign-in');
+        }
+    }, [isLoaded, user, router]);
 
     const theme = createTheme({
         typography: {
-          fontFamily: '"Inter", "Arial", sans-serif',
-        }
-      })
-    
+            fontFamily: '"Inter", "Arial", sans-serif',
+        },
+    })
+
 
     const handleSubmit = async () => {
         fetch('api/generate', {
             method: 'POST',
             body: text,
         })
-        .then((res) => res.json())
-        .then(data => setFlashcards(data))
+            .then((res) => res.json())
+            .then(data => setFlashcards(data))
 
     }
 
@@ -39,6 +48,15 @@ export default function Generate() {
             ...prev,
             [id]: !prev[id],
         }))
+
+    }
+
+    const nextcard = () => {
+        setCard((prevIndex) => (prevIndex + 1) % flashcards.length);
+    }
+
+    const prevcard = () => {
+        setCard((prevIndex) => (prevIndex - 1 + flashcards.length) % flashcards.length)
     }
 
     const handleOpen = () => {
@@ -66,7 +84,7 @@ export default function Generate() {
 
             }
             else {
-                collections.push({name})
+                collections.push({ name })
                 batch.set(userDocRef, { flashcards: collections }, { merge: true });
             }
 
@@ -88,152 +106,225 @@ export default function Generate() {
     }
 
     return (
-    <ThemeProvider theme={theme}>
-    <CssBaseline/>
-    <Box sx={{
-        backgroundImage: "url('https://images.unsplash.com/photo-1684162204507-0e21d7eeded7?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
-        backgroundSize: 'cover',
-        color: 'white',
-        width: '100vw',
-        height: '100vh',
-        overflow: 'hidden',
+        <ThemeProvider theme={theme}>
+            <CssBaseline />
+            
+            <Box sx={{
+                backgroundImage: "url('https://news.mit.edu/sites/default/files/images/202211/MIT-Neural-Networks-01.gif')",
+                backgroundSize: 'cover',
+                color: 'white',
+                width: '100vw',
+                height: '100vh',
+                overflow: 'hidden',
 
-    }}>
-    <Container maxWidth="md">
-        <Box
-            sx={{
-                mt: 4,
-                mb: 6,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-            }}
-        >
-            <Typography variant="h4" mb={2}>Generate Flashcards</Typography>
-                <TextField
-                    value={text}
-                    onChange={(e) => setText(e.target.value)}
-                    label="Enter text"
-                    fullWidth
-                    multiline
-                    rows={4}
-                    variant="outlined"
-                    sx={{
-                        backgroundColor: 'white',
-                        borderRadius: '10px',
-                        mb: 2 
-
-                        
-                        
-                        
-                    }}
-                ></TextField>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleSubmit}
-                    fullWidth
-                    sx={{
+            }}>
+                <AppBar position="static" color="transparent" sx={{ mt: 2 }}>
+            <Toolbar variant="dense">
+                <IconButton
+                    edge="start"
+                    color="inherit"
+                    onClick={() => router.push('/')} 
+                    sx={{ mr: 2 }}
+                >
+                    <Home sx={{ fontSize: 30 }} /> 
+                </IconButton>
+                <IconButton
+                    edge="start"
+                    color="inherit"
+                    onClick={() => router.push('/flashcards')} 
+                    sx={{ mr: 2 }}
+                >
+                    <Folder sx={{ fontSize: 30 }} /> 
+                </IconButton>
+                <Typography variant="h5" style={{ flexGrow: 1 }}></Typography>
+                <SignedOut>
+                    <Button color="inherit" onClick={(e) => { e.preventDefault(); router.push("/sign-in") }}>{' '}Login</Button>
+                    <Button color="inherit" onClick={(e) => { e.preventDefault(); router.push("/sign-up") }} sx={{
                         borderRadius: '10px',
                         border: '2px solid white',
                         color: 'black',
                         backgroundColor: 'white',
                         '&:hover': {
-                          backgroundColor: 'rgba(255, 255, 255, 0.8)'
-                        }}}
+                            backgroundColor: 'rgba(255, 255, 255, 0.8)'
+                        }
+                    }}>{' '}Sign up</Button>
+                </SignedOut>
+                <SignedIn>
+                    <UserButton />
+                </SignedIn>
+            </Toolbar>
+        </AppBar>
+                <Container maxWidth="md">
+                    <Box
+                        sx={{
+                            mt: 4,
+                            mb: 6,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Typography variant="h4" mb={2}>Generate Flashcards</Typography>
+                        <TextField
+                            value={text}
+                            onChange={(e) => setText(e.target.value)}
+                            label="Enter text"
+                            fullWidth
+                            multiline
+                            rows={4}
+                            variant="outlined"
+                            sx={{
+                                backgroundColor: 'white',
+                                borderRadius: '10px',
+                                mb: 2
 
 
-                >{' '}Submit</Button>
-        </Box>
-        {flashcards.length > 0 && <Box sx={{ mt: 4 }}>
-            <Typography variant="h5">Flashcards Preview</Typography>
-            <Grid container spacing={3}>
-                {flashcards.map((flashcard, index) => (
-                    <Grid item xs={12} sm={6} md={4} key={index}>
-                        <Card>
-                            <CardActionArea onClick={() => { handleCardClick(index) }}>
-                                <CardContent>
-                                    <Box sx={{
-                                        perspective: '1000px',
-                                        '& > div': {
-                                            transition: 'transform 0.6s',
-                                            transformStyle: 'preserve-3d',
-                                            position: 'relative',
-                                            width: '100%',
-                                            height: '200px',
-                                            boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
-                                            transform: flipped[index] ? 'rotateY(180deg)': 'rotateY(0deg)',
-                                        },
-                                        '& > div > div': {
-                                            position: 'absolute',
-                                            width: '100%',
-                                            height: '100%',
-                                            backfaceVisibility: 'hidden',
-                                            display: 'flex',
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            padding: 2,
-                                            boxSizing: 'border-box'
-                                        },
-                                        '& > div > div:nth-of-type(2)': {
-                                            transform: 'rotateY(180deg)'
-                                        },
-                                    }}>
-                                        <div>
-                                            <div>
-                                                <Typography variant="h6" component="div">
-                                                    {flashcard.front}
-                                                </Typography>
-                                            </div>
-                                            <div>
-                                                <Typography variant="h6" component="div">
-                                                    {flashcard.back}
-                                                </Typography>
-                                            </div>
-                                        </div>
-                                    </Box>
 
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    </Grid>
-                ))}
-            </Grid>
-            <Box sx={{
-                mt: 4,
-                display: 'flex',
-                justifyContent: 'center'
-            }}>
-                <Button variant="contained" color="secondary" onClick={handleOpen}>
-                    Save
-                </Button>
-            </Box>
-        </Box>
-        }
-        <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>Save Flashcards</DialogTitle>
-             <DialogContent>
-                 {/* <DialogContentText>
+
+                            }}
+                        ></TextField>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleSubmit}
+                            fullWidth
+                            sx={{
+                                borderRadius: '10px',
+                                border: '2px solid white',
+                                color: 'black',
+                                backgroundColor: 'white',
+                                '&:hover': {
+                                    backgroundColor: 'rgba(255, 255, 255, 0.8)'
+                                }
+                            }}
+
+
+                        >{' '}Submit</Button>
+                    </Box>
+                    {flashcards.length > 0 && (
+                        <Box sx={{
+                            marginTop: '-60px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            height: '80vh', // Adjust this height if needed
+                        }}>
+                            <Typography variant="h5" mb={2}>Flashcards Preview</Typography>
+                            <Box sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: '100%',
+                                maxWidth: '1100px',
+                                position: 'relative',
+                                height: '400px', // Fixed height for the card container
+                            }}>
+                                <IconButton
+                                    onClick={prevcard}
+                                    sx={{
+                                        position: 'absolute',
+                                        left: 0,
+                                        backgroundColor: 'white',
+                                        zIndex: 1,
+                                    }}
+                                >
+                                    <ArrowBack />
+                                </IconButton>
+                                <Card sx={{ width: '100%', maxWidth: '1000px', height: '100%' }}>
+                                    <CardActionArea onClick={() => handleCardClick(card)} sx={{ height: '100%' }}>
+                                        <CardContent sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                            <Box sx={{
+                                                perspective: '1000px',
+                                                width: '100%',
+                                                height: '100%',
+                                                '& > div': {
+                                                    transition: 'transform 0.6s',
+                                                    transformStyle: 'preserve-3d',
+                                                    position: 'relative',
+                                                    width: '100%',
+                                                    height: '100%',
+                                                    transform: flipped[card] ? 'rotateY(180deg)' : 'rotateY(0deg)',
+                                                },
+                                                '& > div > div': {
+                                                    position: 'absolute',
+                                                    width: '100%',
+                                                    height: '100%',
+                                                    backfaceVisibility: 'hidden',
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    padding: 2,
+                                                },
+                                                '& > div > div:nth-of-type(2)': {
+                                                    transform: 'rotateY(180deg)',
+                                                },
+                                            }}>
+                                                <div>
+                                                    <div>
+                                                        <Typography variant="h6" component="div">
+                                                            {flashcards[card].front}
+                                                        </Typography>
+                                                    </div>
+                                                    <div>
+                                                        <Typography variant="h6" component="div">
+                                                            {flashcards[card].back}
+                                                        </Typography>
+                                                    </div>
+                                                </div>
+                                            </Box>
+                                        </CardContent>
+                                    </CardActionArea>
+                                </Card>
+                                <IconButton
+                                    onClick={nextcard}
+                                    sx={{
+                                        position: 'absolute',
+                                        right: 0,
+                                        backgroundColor: 'white',
+                                        zIndex: 1,
+                                    }}
+                                >
+                                    <ArrowForward />
+                                </IconButton>
+                            </Box>
+                            <Box sx={{
+                                mt: 4,
+                                display: 'flex',
+                                justifyContent: 'center',
+                            }}>
+                                <Button variant="contained" color="secondary" onClick={handleOpen}>
+                                    Save
+                                </Button>
+                            </Box>
+                        </Box>
+                    )}
+
+
+                    <Dialog open={open} onClose={handleClose}>
+                        <DialogTitle>Save Flashcards</DialogTitle>
+                        <DialogContent>
+                            {/* <DialogContentText>
                     Please enter a name for your flashcards collection
                 </DialogContentText> */}
-                <TextField 
-                autoFocus 
-                margin="dense" 
-                label="Collection Name" 
-                type="text" 
-                fullWidth 
-                value={name} 
-                onChange={(e) => setName(e.target.value)} 
-                variant="outlined"></TextField> 
-            </DialogContent> 
-            <DialogActions>
-                <Button onClick={handleClose}>Close</Button>
-                <Button onClick={saveFlashcards}>Save</Button>
-            </DialogActions> 
-        </Dialog>
-    </Container>
-    </Box>
-    </ThemeProvider>
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                label="Collection Name"
+                                type="text"
+                                fullWidth
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                variant="outlined"></TextField>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={handleClose}>Close</Button>
+                            <Button onClick={saveFlashcards}>Save</Button>
+                        </DialogActions>
+                    </Dialog>
+                </Container>
+            </Box>
+        </ThemeProvider>
     )
 
 

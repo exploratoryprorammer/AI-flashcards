@@ -53,7 +53,7 @@ export default function Home() {
     <Container
       maxWidth="100vw"
       sx={{
-        backgroundImage: "url('https://images.unsplash.com/photo-1684162204507-0e21d7eeded7?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
+        backgroundImage: "url('https://news.mit.edu/sites/default/files/images/202211/MIT-Neural-Networks-01.gif')",
         backgroundSize: 'cover',
         color: 'white',
         width: '100vw',
@@ -71,7 +71,7 @@ export default function Home() {
 
         <AppBar position="static" color="transparent" sx={{mt: 2}}>
           <Toolbar variant="dense">
-            <Typography variant="h5" style={{ flexGrow: 1 }}>LOGO</Typography>
+            <Typography variant="h5" style={{ flexGrow: 1 }}>MEMORA</Typography>
             <SignedOut>
               <Button color="inherit" onClick={ (e) => {e.preventDefault(); router.push("/sign-in")}}>{' '}Login</Button>
               <Button color="inherit" onClick={ (e) => {e.preventDefault(); router.push("/sign-up")}} sx={{
