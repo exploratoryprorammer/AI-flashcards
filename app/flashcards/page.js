@@ -1,5 +1,5 @@
 'use client'
-// import { useUser } from "@clerk/nextjs"
+import { useUser } from "@clerk/nextjs"
 import { useEffect, useState } from "react"
 import {collection, CollectionReference, doc, getDoc, setDoc } from "firebase/firestore"
 import { db } from "@/firebase"
@@ -7,19 +7,19 @@ import { IconButton, AppBar, Toolbar, Grid, Card, Container, TextField, Typograp
 import { ArrowBack, ArrowForward, Home, HPlusMobiledata } from "@mui/icons-material";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { useRouter } from "next/navigation"
-// import { useAuth } from "@clerk/nextjs"
+import { useAuth } from "@clerk/nextjs"
 
 export default function Flashcard() {
-    // const {isLoaded, user} = useUser();
+    const {isLoaded, user} = useUser();
     const [flashcards, setFlashcards] = useState([]);
     const router = useRouter();
-    // const { isSignedIn } = useAuth(); 
+    const { isSignedIn } = useAuth(); 
 
-    // useEffect(() => {
-    //     if (isLoaded && !user) {
-    //         router.push('/sign-in');
-    //     }
-    // }, [isLoaded, user, router]);
+    useEffect(() => {
+        if (isLoaded && !user) {
+            router.push('/sign-in');
+        }
+    }, [isLoaded, user, router]);
 
 
 
