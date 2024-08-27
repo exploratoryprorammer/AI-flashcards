@@ -32,7 +32,7 @@ export async function POST(req) {
                 product_data:{
                     name: 'Donate'
                 },
-                unit_amount: formatAmountForStripe(10),
+                unit_amount: formatAmountForStripe(1),
 
             },
             quantity: 1,
