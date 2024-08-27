@@ -11,7 +11,7 @@ import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
 
 export default function Generate() {
-    const { isLoaded, isSignedIn, user } = useUser()
+    // const { isLoaded, isSignedIn, user } = useUser()
     const [flashcards, setFlashcards] = useState([]);
     const [flipped, setFlipped] = useState([]);
     const [text, setText] = useState('');
@@ -20,11 +20,11 @@ export default function Generate() {
     const [card, setCard] = useState(0);
     const router = useRouter();
 
-    useEffect(() => {
-        if (isLoaded && !user) {
-            router.push('/sign-in');
-        }
-    }, [isLoaded, user, router]);
+    // useEffect(() => {
+    //     if (isLoaded && !user) {
+    //         router.push('/sign-in');
+    //     }
+    // }, [isLoaded, user, router]);
 
     const theme = createTheme({
         typography: {

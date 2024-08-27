@@ -10,16 +10,16 @@ import { useRouter } from "next/navigation"
 import { useAuth } from "@clerk/nextjs"
 
 export default function Flashcard() {
-    const {isLoaded, user} = useUser();
+    // const {isLoaded, user} = useUser();
     const [flashcards, setFlashcards] = useState([]);
     const router = useRouter();
     const { isSignedIn } = useAuth(); 
 
-    useEffect(() => {
-        if (isLoaded && !user) {
-            router.push('/sign-in');
-        }
-    }, [isLoaded, user, router]);
+    // useEffect(() => {
+    //     if (isLoaded && !user) {
+    //         router.push('/sign-in');
+    //     }
+    // }, [isLoaded, user, router]);
 
 
 
