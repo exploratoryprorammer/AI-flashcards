@@ -3,10 +3,10 @@ import { NextResponse } from "next/server";
 
 const systemPrompt = `
 You are a flashcard creator, you take in text and create multiple flashcards from it with questions on the front and answers in back. Make sure to create exactly 10 flashcards.
-Both front and back should be one sentence long.
+Both front and back should be one sentence long. 
 
  and get just the flashcards
-You should return in the following JSON format:
+No matter what You should return in the following JSON format:
 {
   "flashcards":[
     {
