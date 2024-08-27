@@ -53,12 +53,10 @@ export default function Generate() {
 
     const nextcard = () => {
         setCard((prevIndex) => (prevIndex + 1) % flashcards.length);
-        console.log(card);
     }
 
     const prevcard = () => {
         setCard((prevIndex) => (prevIndex - 1 + flashcards.length) % flashcards.length)
-        console.log(card);
 
     }
 
