@@ -6,7 +6,7 @@ import { use, useState, useEffect } from "react";
 import { Toolbar, AppBar, IconButton, CssBaseline, ThemeProvider, createTheme, Grid, Card, Container, TextField, Typography, Box, Paper, Button, CardActionArea, CardContent, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
 import { db } from "@/firebase";
 import { doc, collection, getDoc, setDoc, writeBatch } from "firebase/firestore";
-import { ArrowBack, ArrowForward, Home,Folder } from "@mui/icons-material";
+import { ArrowBack, ArrowForward, Home, Folder } from "@mui/icons-material";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
 
@@ -111,7 +111,7 @@ export default function Generate() {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-            
+
             <Box sx={{
                 backgroundImage: "url('https://news.mit.edu/sites/default/files/images/202211/MIT-Neural-Networks-01.gif')",
                 backgroundSize: 'cover',
@@ -122,41 +122,41 @@ export default function Generate() {
 
             }}>
                 <AppBar position="static" color="transparent" sx={{ mt: 2 }}>
-            <Toolbar variant="dense">
-                <IconButton
-                    edge="start"
-                    color="inherit"
-                    onClick={() => router.push('/')} 
-                    sx={{ mr: 2 }}
-                >
-                    <Home sx={{ fontSize: 30 }} /> 
-                </IconButton>
-                <IconButton
-                    edge="start"
-                    color="inherit"
-                    onClick={() => router.push('/flashcards')} 
-                    sx={{ mr: 2 }}
-                >
-                    <Folder sx={{ fontSize: 30 }} /> 
-                </IconButton>
-                <Typography variant="h5" style={{ flexGrow: 1 }}></Typography>
-                <SignedOut>
-                    <Button color="inherit" onClick={(e) => { e.preventDefault(); router.push("/sign-in") }}>{' '}Login</Button>
-                    <Button color="inherit" onClick={(e) => { e.preventDefault(); router.push("/sign-up") }} sx={{
-                        borderRadius: '10px',
-                        border: '2px solid white',
-                        color: 'black',
-                        backgroundColor: 'white',
-                        '&:hover': {
-                            backgroundColor: 'rgba(255, 255, 255, 0.8)'
-                        }
-                    }}>{' '}Sign up</Button>
-                </SignedOut>
-                <SignedIn>
-                    <UserButton />
-                </SignedIn>
-            </Toolbar>
-        </AppBar>
+                    <Toolbar variant="dense">
+                        <IconButton
+                            edge="start"
+                            color="inherit"
+                            onClick={() => router.push('/')}
+                            sx={{ mr: 2 }}
+                        >
+                            <Home sx={{ fontSize: 30 }} />
+                        </IconButton>
+                        <IconButton
+                            edge="start"
+                            color="inherit"
+                            onClick={() => router.push('/flashcards')}
+                            sx={{ mr: 2 }}
+                        >
+                            <Folder sx={{ fontSize: 30 }} />
+                        </IconButton>
+                        <Typography variant="h5" style={{ flexGrow: 1 }}></Typography>
+                        <SignedOut>
+                            <Button color="inherit" onClick={(e) => { e.preventDefault(); router.push("/sign-in") }}>{' '}Login</Button>
+                            <Button color="inherit" onClick={(e) => { e.preventDefault(); router.push("/sign-up") }} sx={{
+                                borderRadius: '10px',
+                                border: '2px solid white',
+                                color: 'black',
+                                backgroundColor: 'white',
+                                '&:hover': {
+                                    backgroundColor: 'rgba(255, 255, 255, 0.8)'
+                                }
+                            }}>{' '}Sign up</Button>
+                        </SignedOut>
+                        <SignedIn>
+                            <UserButton />
+                        </SignedIn>
+                    </Toolbar>
+                </AppBar>
                 <Container maxWidth="md">
                     <Box
                         sx={{
@@ -171,7 +171,7 @@ export default function Generate() {
                         <TextField
                             value={text}
                             onChange={(e) => setText(e.target.value)}
-                            label="Enter text"
+                            label="Enter text to produce flashcards"
                             fullWidth
                             multiline
                             rows={4}
@@ -179,10 +179,10 @@ export default function Generate() {
                             sx={{
                                 backgroundColor: 'white',
                                 borderRadius: '10px',
-                                mb: 2
-
-
-
+                                mb: 2,
+                                backgroundColor: 'white',
+                                borderRadius: '10px',
+                                mb: 2,
 
                             }}
                         ></TextField>
@@ -206,14 +206,13 @@ export default function Generate() {
                     </Box>
                     {flashcards.length > 0 && (
                         <Box sx={{
-                            marginTop: '-60px',
+                            marginTop: '-130px',
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'center',
                             justifyContent: 'center',
                             height: '80vh', // Adjust this height if needed
                         }}>
-                            <Typography variant="h5" mb={2}>Flashcards Preview</Typography>
                             <Box sx={{
                                 display: 'flex',
                                 alignItems: 'center',
