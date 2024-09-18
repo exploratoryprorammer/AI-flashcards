@@ -19,14 +19,11 @@ No matter what You should return in the following JSON format:
 //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
 export async function POST(req)
 {
-    const openai = new OpenAI({
-        baseURL: "https://openrouter.ai/api/v1",
-        apiKey: "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",
-    });
+    const openai = new OpenAI(process.env.OPENAI_API_KEY);
     const data = await req.text();
 
     const completion = await openai.chat.completions.create({
-        model: 'meta-llama/llama-3.1-8b-instruct:free',
+        model: 'gpt-3.5-turbo',
         messages:[
             {role: "system", content: systemPrompt},
             {role: 'user', content: data},
